@@ -1,4 +1,4 @@
-# 24_Fernandes 
+# 24_Fernandes.md
 Porjet d'étude Iut S2 tkt
 groupe numéro : 24
 
