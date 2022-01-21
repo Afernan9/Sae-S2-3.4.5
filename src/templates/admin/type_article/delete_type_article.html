@@ -1,0 +1,24 @@
+{% extends 'admin/layout_admin.html' %}
+
+{% block title %}
+    <title>afficher les types d'article</title>
+{% endblock %}
+
+{% block body %}
+<h3>Suppression d'un type d'articles impossible</h3>
+<br>
+<h3>Il y a <span style="color:red;"> {{ nbr_articles.nbr_articles }} </span> article(s) à supprimer</h3>
+<br>
+<ul>
+{% if articles | length >= 1 %}
+
+        {% for ligne in articles %}
+        <li>
+                 nom : {{ ligne.nom }} -  stock : {{ ligne.stock }} - <a class="btn btn-outline-danger" href="/admin/type-article/delete?id={{ ligne.type_article_id }}&amp;id_article={{ligne.id}}" >supprimer</a>
+        </li><br>
+        {% endfor %}
+
+{% endif %}
+</ul>
+<a class="btn btn-outline-warning" href="/admin/type-article/show" >annuler</a>
+{% endblock %}

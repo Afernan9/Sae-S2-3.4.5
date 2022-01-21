@@ -1,0 +1,79 @@
+{#https://getbootstrap.com/docs/4.0/components/navbar/#}
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">SAE BDD 2022 <span style="color:#ff0000;">  Menu Admin </span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="DropdownCommandes" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Commandes
+                </a>
+                <div class="dropdown-menu" aria-labelledby="DropdownCommandes">
+                    <a class="dropdown-item"  href="/admin/commande/show" >Gestions des commandes</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="DropdownClient" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Clients
+                </a>
+                <div class="dropdown-menu" aria-labelledby="DropdownClient">
+                    <a class="dropdown-item" href="">Gestions des clients</a>
+                </div>
+            </li>
+
+
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="DropdownEvenements" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Articles
+                </a>
+                <div class="dropdown-menu" aria-labelledby="DropdownProduits">
+                    <a class="dropdown-item" href="/admin/article/show"   >Gestion des produits</a>
+                    <a class="dropdown-item" href="/admin/article/details"   > Détails des types de produit </a>
+                    <a class="dropdown-item" href="/admin/type-article/show"    > Gestion des types de produit </a>
+                </div>
+            </li>
+        </ul>
+
+
+        <ul class="nav navbar-nav navbar-right">
+            <!-- Authentication Links -->
+            {%  if session['role'] %}
+                <span class="navbar-text">
+                    Bonjour {{ session['username'] }}
+                    {% if session['role'] == 'ROLE_admin' %} (role : Admin )
+                    {% elif session['role'] == 'ROLE_client' %} (role : Client ) {% endif %}
+            </span>
+                <a class="btn btn-outline-success" type="button" href="/logout" >
+                    Se déconnecter
+                </a>
+
+            {% else %}
+                <a class="btn btn-outline-success" type="button" href="/login" >
+                    Se connecter
+                </a>
+                <a class="btn btn-outline-success" type="button" href="/change-password" >
+                    mot de passe oublié
+                </a>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>
+
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-danger">
+          Information : <strong>{{ messages[0] }}</strong>
+        </div>
+    {% endif %}
+{% endwith %}
+

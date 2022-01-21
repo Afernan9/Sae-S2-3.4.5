@@ -1,0 +1,13 @@
+{% extends 'admin/layout_admin.html' %}
+
+{% block title %}
+    <title>ajouter un type d'article</title>
+{% endblock %}
+
+{% block body %}
+{#  <h2>ajout d'un type d'article</h2>#}
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+
+{% endblock %}

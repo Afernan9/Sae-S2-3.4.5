@@ -1,0 +1,12 @@
+{% extends 'admin/layout_admin.html' %}
+{% block title %}
+    <title>modifier un article</title>
+{% endblock %}
+
+{% block body %}
+{#  <h2>modifier d'un article</h2>#}
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+
+{% endblock %}

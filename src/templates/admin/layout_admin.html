@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SAE BDD</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" >
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bootstrap.css') }}" >
+        <link rel="stylesheet" href="{{ url_for('static', filename='mes_styles.css') }}" >
+    {% endblock %}
+</head>
+<body>
+{% include('admin/_nav_admin.html') %}
+<div class="container  container-md">
+{% block body %}
+    <h2 style="color:blue">layout.html.twig</h2>  
+    ************** page Admin **************  Bonjour, {{ session['username'] }}! {{ session['role'] }}
+{% endblock %}
+</div>
+{% block javascripts %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{{ url_for('static', filename='assets/js/jquery-3.5.1.slim.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/popper.min.js') }}" ></script>
+    <script src="{{ url_for('static', filename='assets/js/bootstrap.js') }}" ></script>
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends 'admin/layout_admin.html' %}
+
+{% block javascripts %}
+{#    attention il faut importer la bibliotheque chart.js avant de définir l'objet chart#}
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}" ></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    <title>afficher les types d'article</title>
+{% endblock %}
+
+{% block body %}
+<h3>Coût de stockage</h3><br>
+<a class="btn btn-outline-success" href="https://www.lokad.com/fr/couts-stock-definition" target="_blank">article sur les coûts de stockage</a>
+<br><br>
+
+    <h2>visualisation de données : graph.js</h2>
+    labels: {{ labels | safe }} <br>
+    data: {{ values | safe }}<br><br>
+    <a href="https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started/" target="_blank"> tuto partie1 graph.js</a><br>
+    <a href="https://tobiasahlin.com/blog/introduction-to-chartjs" target="_blank"> tuto partie2 graph.js</a>&nbsp;
+    <a href="https://www.youtube.com/watch?v=E2hytuQvLlE" target="_blank"> tuto partie2 graph.js</a>&nbsp;
+    <br>
+
+{# https://jinja.palletsprojects.com/en/3.0.x/templates/#html-escaping #}
+
+    <a href="https://www.youtube.com/watch?v=TcwYXIIM-fs" target="_blank">dataviz, c'est quoi en 1 mn ? (juste la première minute)</a>
+    <br>
+    <a href="https://www.youtube.com/watch?v=bZDnSUjfMt8" target="_blank">dataviz, c'est quoi ? (juste la première minute)</a>
+{% endblock %}

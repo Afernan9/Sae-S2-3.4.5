@@ -1,0 +1,91 @@
+{% extends "client/layout_client.html" %}
+{% block body %}
+<div class="container">
+    <div class="row">
+         <h2 class="card-title">
+             <span style="color: #0b2e13">{{ article.nom }}</span> &nbsp;{{ article.prix }} €
+         </h2>
+
+        <div class="card-body">
+        {%  if article.image is not none %}
+            <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/' + article['image']) }}"  alt="image  de {{ article.nom }}" >
+        {% else %} <img class="card-img-top rounded mx-auto d-block"   style="width:100px;height:100px"   src="{{ url_for('static', filename='images/no_photo.jpeg')}}"  alt="image  de {{ article.nom }}" >
+        {% endif %}
+
+        </div>
+    </div>
+
+    <div class="row" style="background-color: #ba8b00">
+        {% if commandes_articles | length > 0 %}
+            <div class="col-12">
+                 Vous avez commandé <strong>{{ commandes_articles | length }} </strong>fois  ce produit
+            </div>
+            <form  action="/client/comment/add"  method="post">
+                <div class="col">
+                  <label for="inputAvis" class="form-label">Mettez un commentaire sur cet article : </label>
+                     <textarea name="commentaire" class="form-control" aria-label="Donnez votre avis" id="inputAvis"  placeholder="Donnez votre avis"></textarea>
+                </div>
+                <div class="col-12">
+                    <label for="inputNote" class="form-label">Donnez une note à cet article </label>
+                    <input type="number" name="note" id="inputNote" step="0.1" min="0" max="5" class="form-control" style="width: 8rem !important;" value="" >
+                </div>
+                <input type="hidden" name="idUser" value="{{ session['user_id'] }}">
+                <input type="hidden" name="idArticle" value="{{ article.id }}">
+                <form  action="/client/comment/add" style="display: inline-block;"  method="post" >
+                        <button class="btn btn-primary" > Ajouter un avis </button>
+                </form>
+            </form>
+
+
+        {% else %}
+            vous n'avez jamais acheté ce produit
+        {% endif %}
+
+    </div>
+
+    <div class="row">
+            <div class="col-5 bg-light p-3">
+        <h3>Les commentaires</h3>
+            </div>
+        <table class="table" style="border: solid #8959A8 1px ">
+            <thead class="thead-dark">
+            <tr>
+                <th>user</th>
+                <th>Commentaires</th>
+                <th>Note</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if commentaires %}
+                {% for commentaire in commentaires %}
+                    <tr>
+                        <td>{{ commentaire.user_id }}</td>
+                        <td>{{ commentaire.commentaire }}</td>
+                        <td>{{ commentaire.note }}
+                        {{ commentaire.__dict__ }}
+                        </td>
+                        <td>
+                            {% if commentaire.user_id == session['user_id'] %}
+                                  <form  action="/client/comment/delete"  style="display: inline-block;"  method="post" >
+                                      <input type="hidden" name="idArticle" value="{{ commentaire.article_id }}">
+                                      <input type="hidden" name="idUser" value="{{ commentaire.user_id }}">
+                                      <input type="hidden" name="idAvis" value="{{ commentaire.id }}">
+                                      <button class="btn btn-primary" > supprimer </button>
+                                  </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr class="table-warning"><td>Pas de commentaire</td><td></td><td></td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+        <a class="btn btn-outline-primary btn-lg" href="/client/article/show" >Retour vers la page d'accueil</a>
+    </div>
+</div>
+
+
+
+{% endblock %}

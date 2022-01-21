@@ -1,0 +1,54 @@
+{#https://getbootstrap.com/docs/4.0/components/navbar/#}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">SAE BDD 2022</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="dropdownAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                         Espace commun
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownAdmin">
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href=""  >
+                            Articles</a>
+                        <a class="dropdown-item" href=""  >
+                            Types d'articles</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+            </li>
+
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <!-- Authentication Links -->
+            {% if session['role']  %}
+                <span class="navbar-text">
+                    Bonjour {{ session['username'] }}
+                    {% if session['role']=='ROLE_admin' %} (role : Admin)
+                    {% elif session['role']=='ROLE_client' %} (role : Client) {% endif %}
+                    &nbsp
+            </span>
+               <a class="btn btn-outline-success" type="button" href="/logout" >
+                    Se déconnecter (Logout)
+                </a>
+            {% else %}
+                <a class="btn btn-outline-success mr-1" type="button" href="/login" >
+                    Se connecter (Login)
+                </a>
+                <a class="btn btn-outline-success" type="button" href="/signup" >
+                    Inscription  (Sign Up)
+                </a>
+                <a class="btn btn-outline-success" type="button" href="">
+                    Mot de passe oublié
+                </a>
+            {% endif %}
+        </ul>
+
+    </div>
+</nav>

@@ -1,0 +1,32 @@
+<!-- templates/login.html -->
+
+{% extends 'auth/layout.html' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+<form method="post" action="/login">
+
+     {% with messages = get_flashed_messages() %}
+         <br>
+        {% if messages %}
+            <div class="alert alert-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+
+    {% endwith %}
+
+
+    <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
+    <label for="inputUsername">Pseudo</label>
+    <input type="text" value="" name="username" id="inputUsername" class="form-control" required autofocus placeholder="Votre login (username)" >
+    <label for="inputPassword">Mot de passe</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" required  placeholder="Votre Password">
+
+    <button class="btn btn-lg btn-primary mt-4" type="submit">
+        Se connecter
+    </button>
+</form>
+{% endblock %}
+
