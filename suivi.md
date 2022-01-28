@@ -1,5 +1,5 @@
 Girard Mathéo :
-  Tâche :
+  Tâche : 
   Durée de la tâche : 
 
 Adrien Fernandes :
