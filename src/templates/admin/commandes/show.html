@@ -2,6 +2,28 @@
 
 {% block body %}
     <div class="container-fluid">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom meuble</th>
+                    <th>Quantité</th>
+                    <th>Prix à l'unité</th>
+                    <th>Prix total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ligne in article_commande %}
+                    <tr>
+                        <td>{{ ligne.nom }}</td>
+                        <td>{{ ligne.quantite }}</td>
+                        <td>{{ ligne.prix }}</td>
+                        <td>{{ ligne.prix_tot }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -22,6 +44,8 @@
                             <td>{{ cmd.username }} <span>({{ cmd.id_CmdUser }})</span></td>
                         <td>
                             <a href="/admin/commande/valider?id_cmd={{ cmd.id_cmd }}">Expédier</a>
+
+                            <a href="/admin/commande/show?id_cmd={{ cmd.id_cmd }}">Détails</a>
                         </td>
                         </tr>
                     {% endfor %}

@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 from flask import Blueprint
-from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
+from flask import request, render_template, redirect
 
 from connexion_db import get_db
 
@@ -25,11 +25,17 @@ def admin_commande_show():
     commande = mycursor.fetchall()
 
 # ====================================================================================================================== à revoir
+
+    # id = request.args.get('id_cmd')
+    # print("id =",id)
     # sql='''select M.nom, L.quantite, M.prix, (M.prix*L.quantite) as prix_tot
     #             from meubles M
-    #             inner join ligne_de_commande L on L.id_LigneMeuble=M.id_meuble;'''
-    article_commande = mycursor.fetchall()
-    return render_template('admin/commandes/show.html', commande=commande, article_commande=article_commande)
+    #             inner join ligne_de_commande L on L.id_LigneMeuble=M.id_meuble
+    #             inner join commande c on c.id_cmd = L.id_LigneCmd
+    #             where c.id_cmd=(%s);'''
+    # mycursor.execute(sql, (id))
+    # article_commande = mycursor.fetchall()
+    return render_template('admin/commandes/show.html', commande=commande)
 
 
 @admin_commande.route('/admin/commande/valider', methods=['get','post'])

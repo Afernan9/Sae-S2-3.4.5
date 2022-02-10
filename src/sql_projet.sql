@@ -113,7 +113,7 @@ INSERT INTO types_meubles (libelle_type) VALUES
     ('lit'),
     ('commode'),
     ('armoire'),
-    ('TABLE'),
+    ('table'),
     ('cabinet');
 SELECT * FROM types_meubles;
 
