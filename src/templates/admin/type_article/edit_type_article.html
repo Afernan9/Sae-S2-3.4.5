@@ -1,28 +1,30 @@
 {% extends 'admin/layout_admin.html' %}
 
 {% block title %}
-    <title>modifier un type d'article</title>
+    <title>modifier un type de meuble</title>
 {% endblock %}
 
 {% block body %}
+  <h2>modifier un type de meuble</h2>
   {% if error %}
     <p class=error><strong>Error:</strong> {{ error }}
   {% endif %}
-  <form method="post" action="/admin/type-article/edit">
+<div class="container">
+  <form method="post" action="{{ url_for('admin_type_article.valid_edit_type_meuble') }}" class="m-3 p-2">
     <fieldset>
-        <legend> Modifier un type d'article</legend>
-        <div class="mb-3">
-        <input type="hidden" name="id" size="18" value="{{ type_article.id }}" id="id">
-        <label for="libelle">libellé</label><br>
-
-        <input class="form-select" type="text" name="libelle" size="18" value="{{ type_article.libelle }}" id="libelle"><br>
-        </div>
-        <div class="col-12">
-        <button class="btn btn-primary" type="submit">Valider</button>
-        </div>
-{#        <input type="submit" value="Modifier" name="Modifier" >#}
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-
+        <legend class="mb-4 ms-5 fs-3"> Modifier un type de meuble</legend>
+            <input name="id" type="hidden" value="{{ type_meuble.id_type }}" class="rounded form-control" id="id">
+            <label class="mb-3" for="libelle">Libelle :</label><br>
+            <input type="text" name="libelle" value="{{ type_meuble.libelle_type }}" class="rounded form-control" id="libelle"><br>
+        <button type="submit" class="btn btn-success btn-sm">
+            modifier
+            <i class="bi bi-check2-square"></i>
+        </button>
+        <button type="reset" class="btn btn-danger btn-sm">
+            réinitialiser
+            <i class="bi bi-recycle"></i>
+        </button>
     </fieldset>
   </form>
+</div>
 {% endblock %}

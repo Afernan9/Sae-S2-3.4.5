@@ -7,10 +7,10 @@ def get_db():
     if db is None:
         db = g._database = pymysql.connect(
             host="localhost",
-            # host="serveurmysql",
-            user="votreLogin",
-            password="votreMotDePasse",
-            database="BDD_flask",
+            #host="serveurmysql",
+            user="ggodailf",
+            password="2711",
+            database="BDD_ggodailf",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )

@@ -22,8 +22,8 @@ def auth_login_post():
     username = request.form.get('username')
     password = request.form.get('password')
     tuple_select = (username)
-    sql = '''requete1'''
-    retour = mycursor.execute(sql, (username))
+    sql = '''select * from user where username=%s;'''
+    retour = mycursor.execute(sql, tuple_select)
     user = mycursor.fetchone()
     if user:
         mdp_ok = check_password_hash(user['password'], password)
@@ -33,7 +33,7 @@ def auth_login_post():
         else:
             session['username'] = user['username']
             session['role'] = user['role']
-            session['user_id'] = user['id']
+            session['user_id'] = user['id_User']
             print(user['username'], user['role'])
             if user['role'] == 'ROLE_admin':
                 return redirect('/admin/commande/index')
@@ -55,7 +55,7 @@ def auth_signup_post():
     username = request.form.get('username')
     password = request.form.get('password')
     tuple_select = (username, email)
-    sql = '''requete2'''
+    sql = '''select * from user where username=%s or email=%s;'''
     retour = mycursor.execute(sql, tuple_select)
     user = mycursor.fetchone()
     if user:
@@ -65,10 +65,10 @@ def auth_signup_post():
     # ajouter un nouveau user
     password = generate_password_hash(password, method='sha256')
     tuple_insert = (username, email, password, 'ROLE_client')
-    sql = '''requete3'''
+    sql = '''insert into user(username,email,password,role) values(%s,%s,%s,%s);'''
     mycursor.execute(sql, tuple_insert)
     get_db().commit()                    # position de cette ligne discutatble !
-    sql='''requete4'''
+    sql='''select last_insert_id_User()1 as last_insert_id;'''
     mycursor.execute(sql)
     info_last_id = mycursor.fetchone()
     user_id = info_last_id['last_insert_id']

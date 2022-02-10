@@ -1,0 +1,55 @@
+{% extends 'admin/layout_admin.html' %}
+
+
+{% block javascripts %}
+    {{ super() }}
+{% endblock %}
+
+{% block javascripts_head %}
+{#    attention il faut importer la bibliotheque chart.js avant de définir l'objet chart#}
+{#    <script src="{{ url_for('static', filename='chart.js') }}" ></script>#}
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    <title>bilan des stocks</title>
+{% endblock %}
+
+{% block body %}
+    <h2>bilan global des stocks</h2>
+    <br>
+    <div class="container-fluid">
+        {% for ligneF in coutStockTot %}
+            <h4>coût total des stocks : <span style="color: #81ab81">{{ ligneF.coutStock }}</span>€ ; nombre de meubles : <span style="color: #81ab81">{{ ligneF.stockDispo }}</span></h4>
+        {% endfor %}
+        <br>
+        <table class="table table-striped">
+            <thead>
+                <tr class="ligne_coloree">
+                    <th>type de meuble</th>
+                    <th>(id)</th>
+                    <th>nombre de meuble en stock</th>
+                    <th>coût du stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ligne in coutStock %}
+                    <tr>
+                        <td>
+                            {{ ligne.libelle_type }}
+                        </td>
+                        <td>
+                            {{ ligne.id_type }}
+                        </td>
+                        <td>
+                            {{ ligne.nbMeubleDispo }}
+                        </td>
+                        <td>
+                            {{ ligne.coutStock }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

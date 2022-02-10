@@ -1,7 +1,39 @@
 {% extends "admin/layout_admin.html" %}
+
 {% block body %}
     <div class="container-fluid">
-
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Identifiant Commande</th>
+                    <th>Date Commande</th>
+                    <th>État de la commande</th>
+                    <th>Utilisateur</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if commande | length >= 1 %}
+                    {% for cmd in commande %}
+                        <tr>
+                            <td>{{ cmd.id_cmd }}</td>
+                            <td>{{ cmd.date_achat }}</td>
+                            <td>{{ cmd.libelle_etat }} <span>({{ cmd.id_CmdEtat }})</span></td>
+                            <td>{{ cmd.username }} <span>({{ cmd.id_CmdUser }})</span></td>
+                        <td>
+                            <a href="/admin/commande/valider?id_cmd={{ cmd.id_cmd }}">Expédier</a>
+                        </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>
+                            <p>pas de commande</p>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'admin/layout_admin.html' %}
+
+
+{% block javascripts %}
+    {{ super() }}
+{% endblock %}
+
+{% block javascripts_head %}
+{#    attention il faut importer la bibliotheque chart.js avant de définir l'objet chart#}
+{#    <script src="{{ url_for('static', filename='chart.js') }}" ></script>#}
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    <title>afficher les types d'article</title>
+{% endblock %}
+
+{% block body %}
+<br>
+
+<h2>visualisation de données : graph.js</h2>
+<h3>Documentation</h3>
+<br>
+
+
+{% endblock %}

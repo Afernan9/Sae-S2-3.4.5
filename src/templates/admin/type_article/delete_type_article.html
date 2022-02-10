@@ -1,24 +1,30 @@
 {% extends 'admin/layout_admin.html' %}
 
 {% block title %}
-    <title>afficher les types d'article</title>
+    <title>Suppression impossible</title>
 {% endblock %}
 
 {% block body %}
-<h3>Suppression d'un type d'articles impossible</h3>
-<br>
-<h3>Il y a <span style="color:red;"> {{ nbr_articles.nbr_articles }} </span> article(s) à supprimer</h3>
-<br>
-<ul>
-{% if articles | length >= 1 %}
-
-        {% for ligne in articles %}
-        <li>
-                 nom : {{ ligne.nom }} -  stock : {{ ligne.stock }} - <a class="btn btn-outline-danger" href="/admin/type-article/delete?id={{ ligne.type_article_id }}&amp;id_article={{ligne.id}}" >supprimer</a>
-        </li><br>
+    <div class="container-fluid">
+        <h2>Supression d'un type de meubles impossible</h2>
+        {% for nbTot in nbTot %}
+            <h4>il y a : {{ nbTot.nbMeublesSup }} meuble(s) à supprimer</h4>
         {% endfor %}
+            <ul>
+                {% for ligne in meublesAssocies %}
+                    <li>
+                        nom : {{ ligne.nom }} - stock :{{ ligne.nbStock }}
+                        <a class="btn btn-sm btn-outline-light text-secondary" href="{{ url_for('admin_type_article.deleteMeuble_type_meuble',id=ligne.id_MeubleType, id_meuble=ligne.id_meuble) }}">
+                            supprimer
+                            <i class="bi bi-trash"></i>
+                        </a>
 
-{% endif %}
-</ul>
-<a class="btn btn-outline-warning" href="/admin/type-article/show" >annuler</a>
+                    {# <a class="btn btn-outline-danger" href="/admin/type-article/delete?id=4&amp;id_article=9">supprimer</a> #}
+                    {# <a class="btn btn-outline-warning" href="/admin/type-article/delete?id=4">supprimer</a> #}
+                    </li>
+                {% endfor %}
+            </ul>
+        <a href="/type-meuble/show" class="lienEditSup">annuler</a>
+    </div>
 {% endblock %}
+

@@ -24,10 +24,14 @@
                         <tr>
                             <td>{{itemPanier.nom}}</td>
                             <td>{{itemPanier.quantite}}</td>
-                            <td>{{itemPanier.prix}}</td>
-                            <td>{{ "{:,.2f} €".format((itemPanier.prix * itemPanier.quantite)) }}</td>
+                            {% if itemPanier.prix is defined %}
+                                <td>{{itemPanier.prix}}</td>
+                                <td>{{ "{:,.2f} €".format((itemPanier.prix * itemPanier.quantite)) }}</td>
+                            {% else %} 
+                                <td>prix ND</td><td>prix*qte ND</td>
+                            {% endif %}
                             <td>
-                               {% if itemPanier.stock > 0 %}
+                               {% if itemPanier.stock is defined and itemPanier.stock > 0 %}
                                 <form action="/client/panier/add" style="display: inline-block;"  method="post">
                                         <input type="hidden" name="quantite" value="1">
                                         <input type="hidden" name="idArticle" value="{{ itemPanier.article_id }}">
@@ -134,3 +138,4 @@
         </div>
     </div>
 {% endblock %}
+

@@ -15,7 +15,7 @@
                     Commandes
                 </a>
                 <div class="dropdown-menu" aria-labelledby="DropdownCommandes">
-                    <a class="dropdown-item"  href="/admin/commande/show" >Gestions des commandes</a>
+                    <a class="dropdown-item"  href="/admin/commande/show" {#  action="{{ url_for("admin_commande_show") }}"  #} >Gestions des commandes</a>
                 </div>
             </li>
 
@@ -35,9 +35,10 @@
                     Articles
                 </a>
                 <div class="dropdown-menu" aria-labelledby="DropdownProduits">
-                    <a class="dropdown-item" href="/admin/article/show"   >Gestion des produits</a>
-                    <a class="dropdown-item" href="/admin/article/details"   > Détails des types de produit </a>
-                    <a class="dropdown-item" href="/admin/type-article/show"    > Gestion des types de produit </a>
+                    <a class="dropdown-item" href="/admin/meuble/show"  {# admin_produit_show' #} >Gestion des articles</a>
+                    <a class="dropdown-item" href="/admin/type-article/show"    > Gestion des types de produits </a>
+                    <a class="dropdown-item" href="/admin/type-article/bilan-stock"   {# admin_produit_details #} > Détails  (dataviz) des types de articless </a>
+                    <a class="dropdown-item" href="/admin/article/bilan"   {# admin_produit_details #} > Détails (dataviz) d'articles </a>
                 </div>
             </li>
         </ul>
@@ -51,15 +52,15 @@
                     {% if session['role'] == 'ROLE_admin' %} (role : Admin )
                     {% elif session['role'] == 'ROLE_client' %} (role : Client ) {% endif %}
             </span>
-                <a class="btn btn-outline-success" type="button" href="/logout" >
+                <a class="btn btn-outline-success" type="button" href="/logout" {#href="{{ url_for('auth_logout') }}"#}>
                     Se déconnecter
                 </a>
 
             {% else %}
-                <a class="btn btn-outline-success" type="button" href="/login" >
+                <a class="btn btn-outline-success" type="button" href="/login" {#href="{{ url_for('auth_login') }}"#}>
                     Se connecter
                 </a>
-                <a class="btn btn-outline-success" type="button" href="/change-password" >
+                <a class="btn btn-outline-success" type="button" href="/change-password" {#href="{{ url_for('auth_change_password')  }}"#}>
                     mot de passe oublié
                 </a>
             {% endif %}

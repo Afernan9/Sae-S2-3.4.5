@@ -1,12 +1,95 @@
 {% extends 'admin/layout_admin.html' %}
+
 {% block title %}
-    <title>modifier un article</title>
+    <title>modifier un meuble</title>
 {% endblock %}
 
 {% block body %}
-{#  <h2>modifier d'un article</h2>#}
+  <h2>mis à jour d'un meuble</h2>
+
   {% if error %}
-    <p class=error><strong>Error:</strong> {{ error }}
+      <p class=error><strong>Error:</strong> {{ error }}
   {% endif %}
 
+    <div class="container">
+    <form method="post" action="{{ url_for('admin_article.valid_edit_meuble') }}" class="m-3 p-2">
+        <fieldset>
+            {% for meuble in meuble %}
+                <legend class="mb-4 ms-5 fs-3">Modifier un type de meuble</legend>
+                <input type="hidden" name="id" value="{{ meuble.id_meuble }}" id="id">
+
+                <label class="mb-2" for="nom">Nom du meuble :</label>
+                <br>
+                <input name="nom" type="text" value="{{ meuble.nom }}" class="mb-2 rounded form-control" id="nom">
+
+                <br>
+                <label class="mb-2" for="prix">Prix du meuble</label>
+                <br>
+                <input name="prix" type="text" value="{{ meuble.prix }}" class="mb-2 rounded form-control" id="prix">
+
+                <br>
+                <label class="mb-2" for="dateFabrication">Date de fabrication</label>
+                <br>
+                <input name="dateFabrication" type="text" value="{{ meuble.dateFabrication }}" class="mb-2 rounded form-control" id="dateFabrication">
+
+                <br>
+                <label class="mb-2" for="couleur">Couleur du meuble</label>
+                <br>
+                <select name="couleur" class="form-select" id="couleur" required>
+                    {% if couleur | length >= 1 %}
+                        {% for ligne in couleur %}
+                            <option value="{{ ligne.id_couleur }}" {% if meuble.id_MeubleCouleur is defined and ligne.id_couleur == meuble.id_MeubleCouleur %} selected {% endif %}>{{ ligne.libelle_couleur }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <p>pas de meuble</p>
+                    {% endif %}
+                </select>
+
+                <br>
+                <label class="mb-2" for="materiaux">Materiaux :</label>
+                <br>
+                <select name="materiaux" class="form-select" id="materiaux" required>
+                    {% if materiaux | length >= 1 %}
+                        {% for ligne in materiaux %}
+                            <option value="{{ ligne.id_materiaux }}" {% if meuble.id_MeubleMateriaux is defined and ligne.id_materiaux == meuble.id_MeubleMateriaux %} selected {% endif %}>{{ ligne.libelle_materiaux }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <p>pas de meuble</p>
+                    {% endif %}
+                </select>
+                <br>
+
+                <label class="mb-2" for="stock">Stock</label>
+                <br>
+                <input name="stock" type="number" value="{{ meuble.nbStock }}" class="mb-2 rounded form-control" id="stock">
+
+                <br>
+                <label class="mt-3 mb-2" for="image">Image du meuble</label>
+                <br>
+                <input name="image" class="mb-2 rounded" type="file" id="image">
+
+                <br>
+                <label class="mb-2" for="type_meuble">Type de meubles :</label>
+                <select name="typeMeuble_id" class="form-select" id="type_meuble" required>
+                    {% if type_meuble | length >= 1 %}
+                        {% for ligne in type_meuble %}
+                            <option value="{{ ligne.id_type }}" {% if meuble.id_MeubleType is defined and ligne.id_type == meuble.id_MeubleType %} selected {% endif %}>{{ ligne.libelle_type }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <p>pas de meuble</p>
+                    {% endif %}
+                </select>
+                <br>
+                <button type="submit" class="btn btn-success btn-sm">
+                    modifier
+                    <i class="bi bi-check2-square"></i>
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    réinitialiser
+                    <i class="bi bi-recycle"></i>
+                </button>
+            {% endfor %}
+        </fieldset>
+    </form>
+    </div>
 {% endblock %}

@@ -1,13 +1,87 @@
 {% extends 'admin/layout_admin.html' %}
 
 {% block title %}
-    <title>ajouter un article</title>
+    <title>ajouter un meuble</title>
 {% endblock %}
 
 {% block body %}
-  <h2>ajout d'un article</h2>
+  <h2>ajout d'un meuble</h2>
   {% if error %}
-    <p class=error><strong>Error:</strong> {{ error }}
+      <p class=error><strong>Error:</strong> {{ error }}</p>
   {% endif %}
+    <div class="container">
+      <form method="post" action="/meuble/add" class="m-3 p-2">
+        <fieldset>
+            <legend class="mb-4 ms-5 fs-3">Créer un meuble</legend>
+                <label class="mb-2" for="nom">Nom du meuble :</label>
+                <br>
+                <input name="nom_meuble" type="text" size="18"  class="mb-2 rounded form-control" placeholder="Saisir le nom" id="nom">
+                <br>
+                <label class="mb-2" for="prix">Prix du meuble :</label>
+                <br>
+                <input  name="prix_meuble" type="number" step="any" class="mb-2 rounded form-control" placeholder="Saisissez le prix" id="prix" required>
+                <br>
+                <label class="mb-2" for="date_create">Date de création :</label>
+                <br>
+                <input name="dateFabrication" type="date" size="18" class="mb-2 rounded form-control" id="date_create">
+                <br>
+                <label class="mb-2" for="couleur">Couleur du meuble :</label>
+                <br>
+                <select name="couleur" class="form-select" id="type_meuble" required>
+                    <option value="">Choisir</option>
+                    {% if couleur | length >= 1 %}
+                        {% for ligne in couleur %}
+                            <option value="{{ ligne.id_couleur }}">{{ ligne.libelle_couleur }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <p>pas de couleur</p>
+                    {% endif %}
+                </select>
+                <br>
+                <label class="mb-2" for="materiaux">Matériaux du meuble :</label>
+                <br>
+                <select name="materiaux" class="form-select" id="materiaux" required>
+                    <option value="">Choisir</option>
+                    {% if materiaux | length >= 1 %}
+                        {% for ligne in materiaux %}
+                            <option value="{{ ligne.id_materiaux }}">{{ ligne.libelle_materiaux }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <p>pas de materiaux</p>
+                    {% endif %}
+                </select>
+                <br>
 
+                <label class="mb-2" for="stock">Stock</label>
+                <br>
+                <input name="stock" type="number" class="mb-2 rounded form-control" id="stock">
+
+                <br>
+                <label class="mt-3 mb-2" for="image">Image du meuble :</label>
+                <br>
+                <input name="image" type="file" class="mb-3 rounded" id="image">
+                <br>
+                <label class="mb-2" for="type_meuble">Type de meubles :</label>
+                <select name="typeMeuble_id" class="form-select" id="type_meuble" required>
+                    <option value="">Choisir</option>
+                    {% if typeMeuble | length >= 1 %}
+                        {% for ligne in typeMeuble %}
+                            <option value="{{ ligne.id_type }}">{{ ligne.libelle_type }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <p>pas de type de meuble</p>
+                    {% endif %}
+                </select>
+                <br>
+                <button type="submit" class="btn btn-success btn-sm">
+                    créer
+                    <i class="bi bi-check2-square"></i>
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    réinitialiser
+                    <i class="bi bi-recycle"></i>
+                </button>
+        </fieldset>
+      </form>
+    </div>
 {% endblock %}

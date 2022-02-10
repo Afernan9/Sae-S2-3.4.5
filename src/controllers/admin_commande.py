@@ -16,13 +16,28 @@ def admin_index():
 @admin_commande.route('/admin/commande/show', methods=['get','post'])
 def admin_commande_show():
     mycursor = get_db().cursor()
-    commandes = []
-    articles_commande = None
-    return render_template('admin/commandes/show.html', commandes=commandes, articles_commande=articles_commande)
+    sql = '''select C.id_cmd, C.date_achat, C.id_CmdEtat, E.libelle_etat, C.id_CmdUser, U.username
+                from commande C
+                inner join etat E on E.id_etat = C.id_CmdEtat
+                inner join user U on U.id_User = C.id_CmdUser
+                ;'''
+    mycursor.execute(sql)
+    commande = mycursor.fetchall()
+
+# ====================================================================================================================== à revoir
+    # sql='''select M.nom, L.quantite, M.prix, (M.prix*L.quantite) as prix_tot
+    #             from meubles M
+    #             inner join ligne_de_commande L on L.id_LigneMeuble=M.id_meuble;'''
+    article_commande = mycursor.fetchall()
+    return render_template('admin/commandes/show.html', commande=commande, article_commande=article_commande)
 
 
 @admin_commande.route('/admin/commande/valider', methods=['get','post'])
 def admin_commande_valider():
     mycursor = get_db().cursor()
-
-    return redirect('/admin/commande/show') 
+    id = request.args.get('id_cmd')
+    print("id =",id)
+    sql = '''update commande set id_CmdEtat=2 where id_cmd=(%s);'''
+    mycursor.execute(sql, (id))
+    get_db().commit()
+    return redirect('/admin/commande/show')
