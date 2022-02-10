@@ -8,4 +8,4 @@ groupe numéro : 24
 
 URL du projet github : https://github.com/Afernan9/Sae-S2-3.4.5
 
-URL du site pythonanywhere : 
+URL du site pythonanywhere : http://khezku.pythonanywhere.com/
