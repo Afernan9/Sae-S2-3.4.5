@@ -175,7 +175,7 @@ INSERT INTO commande (date_achat, id_CmdEtat, id_CmdUser) VALUES
     ('2003-01-01',4,4),
     ('2015-08-15',2,2),
     ('2020-07-20',3,3),
-    ('2021-02-01',1,1);
+    ('2021-02-01',1,4);
 
 INSERT INTO panier (date_ajout, id_PanierUser, id_PanierMeuble) VALUES
     ('2003-01-01',4,8),

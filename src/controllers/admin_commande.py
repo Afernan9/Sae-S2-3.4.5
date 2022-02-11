@@ -16,27 +16,35 @@ def admin_index():
 @admin_commande.route('/admin/commande/show', methods=['get','post'])
 def admin_commande_show():
     mycursor = get_db().cursor()
-    sql = '''select C.id_cmd, C.date_achat, C.id_CmdEtat, E.libelle_etat, C.id_CmdUser, U.username
+    id_cmd = request.args.get('id_cmd')
+    print(id_cmd)
+
+
+    sql = '''select C.id_cmd, C.date_achat, L.quantite, (M.prix*L.quantite) as prix_tot, C.id_CmdEtat, E.libelle_etat, C.id_CmdUser, U.username
                 from commande C
+                inner join ligne_de_commande L on L.id_LigneCmd=C.id_cmd
+                inner join meubles M on M.id_meuble = L.id_LigneMeuble
                 inner join etat E on E.id_etat = C.id_CmdEtat
                 inner join user U on U.id_User = C.id_CmdUser
-                ;'''
+                ;
+            '''
     mycursor.execute(sql)
     commande = mycursor.fetchall()
 
-# ====================================================================================================================== à revoir
+    if (id_cmd != None):
+        sql='''select M.nom, L.quantite, M.prix, (M.prix*L.quantite) as prix_tot
+                from meubles M
+                inner join ligne_de_commande L on L.id_LigneMeuble = M.id_meuble
+                inner join commande C on C.id_cmd = L.id_LigneCmd
+                where C.id_cmd = (%s)
+                ;
+            '''
+        mycursor.execute(sql, id_cmd)
+        article_commande = mycursor.fetchall()
+        print(article_commande)
+        return render_template('admin/commandes/show.html', commande=commande, article_commande=article_commande)
 
-    # id = request.args.get('id_cmd')
-    # print("id =",id)
-    # sql='''select M.nom, L.quantite, M.prix, (M.prix*L.quantite) as prix_tot
-    #             from meubles M
-    #             inner join ligne_de_commande L on L.id_LigneMeuble=M.id_meuble
-    #             inner join commande c on c.id_cmd = L.id_LigneCmd
-    #             where c.id_cmd=(%s);'''
-    # mycursor.execute(sql, (id))
-    # article_commande = mycursor.fetchall()
     return render_template('admin/commandes/show.html', commande=commande)
-
 
 @admin_commande.route('/admin/commande/valider', methods=['get','post'])
 def admin_commande_valider():

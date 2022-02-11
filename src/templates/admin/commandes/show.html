@@ -2,16 +2,17 @@
 
 {% block body %}
     <div class="container-fluid">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nom meuble</th>
-                    <th>Quantité</th>
-                    <th>Prix à l'unité</th>
-                    <th>Prix total</th>
-                </tr>
-            </thead>
-            <tbody>
+        {% if article_commande | length >= 1 %}
+            <table class="table">
+                <thead>
+                    <tr class="table-dark">
+                        <th>Nom du meuble</th>
+                        <th>Quantite</th>
+                        <th>Prix (unitaire)</th>
+                        <th>Prix total</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for ligne in article_commande %}
                     <tr>
                         <td>{{ ligne.nom }}</td>
@@ -20,8 +21,9 @@
                         <td>{{ ligne.prix_tot }}</td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        {% endif %}
 
 
         <table class="table table-striped">
@@ -29,6 +31,8 @@
                 <tr>
                     <th>Identifiant Commande</th>
                     <th>Date Commande</th>
+                    <th>Nombre de meubles</th>
+                    <th>Coût total</th>
                     <th>État de la commande</th>
                     <th>Utilisateur</th>
                     <th>Options</th>
@@ -40,6 +44,8 @@
                         <tr>
                             <td>{{ cmd.id_cmd }}</td>
                             <td>{{ cmd.date_achat }}</td>
+                            <td>{{ cmd.quantite }}</td>
+                            <td>{{ cmd.prix_tot }}</td>
                             <td>{{ cmd.libelle_etat }} <span>({{ cmd.id_CmdEtat }})</span></td>
                             <td>{{ cmd.username }} <span>({{ cmd.id_CmdUser }})</span></td>
                         <td>
