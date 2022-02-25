@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS avis;
 DROP TABLE IF EXISTS ligne_de_commande;
 DROP TABLE IF EXISTS panier;
 DROP TABLE IF EXISTS commande;
@@ -86,6 +87,7 @@ CREATE TABLE IF NOT EXISTS commande(
 CREATE TABLE IF NOT EXISTS panier(
    id_ajout         INT UNSIGNED AUTO_INCREMENT,
    date_ajout       DATE,
+   panier_quantite         INT,
    id_PanierUser    INT UNSIGNED,
    id_PanierMeuble  INT UNSIGNED,
    PRIMARY KEY(id_ajout),
@@ -105,6 +107,17 @@ CREATE TABLE IF NOT EXISTS ligne_de_commande(
        FOREIGN KEY(id_LigneMeuble) REFERENCES meubles(id_meuble),
    CONSTRAINT fk_idLigneCmd
        FOREIGN KEY(id_LigneCmd) REFERENCES commande(id_cmd)
+);
+
+CREATE TABLE IF NOT EXISTS avis(
+    id_avis                     INT UNSIGNED AUTO_INCREMENT,
+    libelle_avis                varchar(500),
+    note                        NUMERIC(2,1),
+    id_AvisUser                 INT UNSIGNED,
+    id_AvisMeuble               INT UNSIGNED,
+    PRIMARY KEY (id_avis),
+    CONSTRAINT fk_id_AvisUser FOREIGN KEY (id_AvisUser) REFERENCES user(id_User),
+    CONSTRAINT fk_id_AvisMeuble FOREIGN KEY (id_AvisMeuble) REFERENCES meubles(id_meuble)
 );
 
 
@@ -177,11 +190,11 @@ INSERT INTO commande (date_achat, id_CmdEtat, id_CmdUser) VALUES
     ('2020-07-20',3,3),
     ('2021-02-01',1,4);
 
-INSERT INTO panier (date_ajout, id_PanierUser, id_PanierMeuble) VALUES
-    ('2003-01-01',4,8),
-    ('2015-08-15',2,1),
-    ('2020-07-20',3,5),
-    ('2021-02-01',1,3);
+INSERT INTO panier (date_ajout, panier_quantite, id_PanierUser, id_PanierMeuble) VALUES
+    ('2003-01-01',2,4,8),
+    ('2015-08-15',5,2,1),
+    ('2020-07-20',10,3,5),
+    ('2021-02-01',1,1,3);
 
 INSERT INTO ligne_de_commande (id_LigneMeuble, id_LigneCmd, prix_unit, quantite) VALUES
     (8,1,'800',2),
@@ -189,18 +202,14 @@ INSERT INTO ligne_de_commande (id_LigneMeuble, id_LigneCmd, prix_unit, quantite)
     (1,3,'50.20',2),
     (9,4,'52.36',5);
 
+INSERT INTO avis(libelle_avis, note, id_AvisUser, id_AvisMeuble) VALUES
+    ('Très contente de ce produit, la qualité est au rendez-vous pour un prix dérisoire.', '4.8', 2, 1);
+
+select * from avis;
+
 /*select nom,prix,dateFabrication,C.libelle_couleur,M.libelle_materiaux,T.libelle_type,nbStock,image
 from meubles
 inner join couleur C on C.id_couleur = id_MeubleCouleur
 inner join materiaux M on M.id_materiaux = id_MeubleMateriaux
 inner join types_meubles T on T.id_type = id_MeubleType
 order by nom;*/
-
-/*update etat set libelle_etat='en attente' where id_etat=%s;*/
-
-
-/*
-à revoir :
-page admin_commande.py
-admin/commande/show.html
-*/

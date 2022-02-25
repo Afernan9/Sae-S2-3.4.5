@@ -1,12 +1,12 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 from flask import Blueprint
-from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
+from flask import request, render_template, redirect, url_for, flash
 
 from connexion_db import get_db
 
-admin_type_article = Blueprint('admin_type_article', __name__,
-                        template_folder='templates')
+admin_type_article = Blueprint('admin_type_article', __name__, template_folder='templates')
+
 
 @admin_type_article.route('/admin/type-article/show')
 def show_type_meuble():
@@ -24,9 +24,11 @@ def show_type_meuble():
     print('compte = ', compte)
     return render_template('admin/type_article/show_type_article.html', types_meubles=types_meubles, compte=compte)
 
+
 @admin_type_article.route('/type-meuble/add', methods=['GET'])
 def add_type_meuble():
     return render_template('admin/type_article/add_type_article.html')
+
 
 @admin_type_article.route('/type-meuble/add', methods=['POST'])
 def valid_add_type_meuble():
@@ -37,88 +39,105 @@ def valid_add_type_meuble():
     mycursor.execute(sql, tuple_insert)
     get_db().commit()
     print('type ajouté , libellé :', libelle)
-    message = 'type meuble ajouté , libellé :' +libelle
+    message = 'type meuble ajouté , libellé :' + libelle
     flash(message)
-    return redirect('/admin/type-article/show') #url_for('show_type_article')
+    return redirect('/admin/type-article/show')
+
 
 @admin_type_article.route('/type-meuble/delete', methods=['GET'])
 def delete_type_meuble():
     mycursor = get_db().cursor()
     id = request.args.get('id')
-    print("id = ",id)
-    sql='''select * from meubles m
+    print("id = ", id)
+    sql = '''select * from meubles m
         where m.id_MeubleType=%s;'''
-    mycursor.execute(sql,(id))
-    result=mycursor.fetchall()
-    if result==():
+    mycursor.execute(sql, id)
+    result = mycursor.fetchall()
+    if result == ():
         mycursor = get_db().cursor()
         sql = "delete from types_meubles where id_type = (%s);"
-        mycursor.execute(sql, (id))
+        mycursor.execute(sql, id)
         get_db().commit()
         print("un type de meuble supprimé, id :", id)
         flash('un type de meuble supprimé, id : ' + id)
         return redirect(url_for('admin_type_article.show_type_meuble'))
     else:
-        sql='''select count(m.nom) as nbMeublesSup
+        sql = '''select count(m.nom) as nbMeublesSup
             from meubles m
             where m.id_MeubleType=%s
             order by m.nom;'''
-        mycursor.execute(sql, (id))
-        nbTot=mycursor.fetchall()
-        print("nbTot = ",nbTot)
-        sql='''select m.nom, m.id_meuble, m.id_MeubleType, m.nbStock
+        mycursor.execute(sql, id)
+        nb_tot = mycursor.fetchall()
+        print("nbTot = ", nb_tot)
+        sql = '''select m.nom, m.id_meuble, m.id_MeubleType, m.nbStock
             from meubles m
             inner join types_meubles t on t.id_type=m.id_MeubleType
             where t.id_type=%s
             order by m.nom;'''
-        mycursor.execute(sql, (id))
-        meublesAssocies=mycursor.fetchall()
-        print("meublesAssocies = ",meublesAssocies)
-        return render_template('/admin/type_article/delete_type_article.html', nbTot=nbTot, meublesAssocies=meublesAssocies)
+        mycursor.execute(sql, id)
+        meubles_associes = mycursor.fetchall()
+        print("meublesAssocies = ", meubles_associes)
+        return render_template('/admin/type_article/delete_type_article.html', nbTot=nb_tot,
+                               meublesAssocies=meubles_associes)
+
 
 @admin_type_article.route('/type-meuble/deleteMeuble', methods=['GET'])
 def deleteMeuble_type_meuble():
     mycursor = get_db().cursor()
-    id_meuble=request.args.get('id_meuble')
-    id=request.args.get('id')
-    print("id_meuble = ",id_meuble," id = ",id)
-    sql='''delete from meubles
-         where id_meuble=(%s);'''
-    mycursor.execute(sql,id_meuble)
-    get_db().commit()
-    print('un meuble supprimé, id_meuble = ',id_meuble)
+    id_meuble = request.args.get('id_meuble')
+    id = request.args.get('id')
+    print("id_meuble = ", id_meuble, " id = ", id)
+    sql = '''select * from ligne_de_commande
+                where id_LigneMeuble = %s'''
+    mycursor.execute(sql, id_meuble)
+    cmd = mycursor.fetchall()
+    sql = '''select * from panier
+                    where id_PanierMeuble = %s'''
+    mycursor.execute(sql, id_meuble)
+    panier = mycursor.fetchall()
+    if cmd == () and panier == ():
+        sql = "delete from meubles where id_meuble=(%s);"
+        mycursor.execute(sql, id_meuble)
+        get_db().commit()
+        print("un meuble supprimé, id :", id_meuble)
+        flash('un meuble supprimé, id : ' + id_meuble)
+    else:
+        flash("Le meuble n'as pas pu être suprimer car il intéresse ou à été commandé par un client")
     sql = '''select count(m.nom) as nbMeublesSup
         from meubles m
         inner join types_meubles t on t.id_type=m.id_MeubleType
         where t.id_type=%s
         order by m.nom;'''
-    mycursor.execute(sql, (id))
-    nbTot = mycursor.fetchall()
+    mycursor.execute(sql, id)
+    nb_tot = mycursor.fetchall()
     sql = '''select m.nom, m.id_meuble, m.id_MeubleType, m.nbStock
         from meubles m
         inner join types_meubles t on t.id_type=m.id_MeubleType
         where t.id_type=%s
         order by m.nom;'''
-    mycursor.execute(sql, (id))
-    meublesAssocies = mycursor.fetchall()
-    print("meublesAssocies = ", meublesAssocies)
-    if meublesAssocies==():
+    mycursor.execute(sql, id)
+    meubles_associes = mycursor.fetchall()
+    print("meublesAssocies = ", meubles_associes)
+    if meubles_associes == ():
         mycursor = get_db().cursor()
-        sql="delete from types_meubles where id_type=%s;"
-        mycursor.execute(sql,id)
+        sql = "delete from types_meubles where id_type=%s;"
+        mycursor.execute(sql, id)
         get_db().commit()
         print('un type de meuble suprimé')
         return redirect(url_for('admin_type_article.show_type_meuble'))
     else:
-        return render_template('admin/type_article/delete_type_article.html', nbTot=nbTot, meublesAssocies=meublesAssocies)
+        return render_template('admin/type_article/delete_type_article.html', nbTot=nb_tot,
+                               meublesAssocies=meubles_associes)
+
 
 @admin_type_article.route('/type-meuble/edit/<int:id>', methods=['GET'])
 def edit_type_meuble(id):
     mycursor = get_db().cursor()
-    sql="select * from types_meubles where id_type=(%s);"
-    mycursor.execute(sql,id)
-    type_meuble=mycursor.fetchone()
+    sql = "select * from types_meubles where id_type=(%s);"
+    mycursor.execute(sql, id)
+    type_meuble = mycursor.fetchone()
     return render_template('admin/type_article/edit_type_article.html', type_meuble=type_meuble)
+
 
 @admin_type_article.route('/type-meuble/edit', methods=['POST'])
 def valid_edit_type_meuble():

@@ -4,7 +4,7 @@
         <div class="row align-self-right">
             <div class="col-7">
             {% if articlesPanier | length >= 1 %}
-                <h3>Liste des articles dans mon panier</h3>
+                <h3>Liste des meubles dans mon panier</h3>
                 <table class="table table-hover table-responsive">
                     <tr>
                         <th style="width: 300px">Nom</th>
@@ -20,46 +20,46 @@
                         <td></td>
                         <td></td>
                     {% else %}
-                    {% for itemPanier in articlesPanier %}
-                        <tr>
-                            <td>{{itemPanier.nom}}</td>
-                            <td>{{itemPanier.quantite}}</td>
-                            {% if itemPanier.prix is defined %}
-                                <td>{{itemPanier.prix}}</td>
-                                <td>{{ "{:,.2f} €".format((itemPanier.prix * itemPanier.quantite)) }}</td>
-                            {% else %} 
-                                <td>prix ND</td><td>prix*qte ND</td>
-                            {% endif %}
-                            <td>
-                               {% if itemPanier.stock is defined and itemPanier.stock > 0 %}
-                                <form action="/client/panier/add" style="display: inline-block;"  method="post">
-                                        <input type="hidden" name="quantite" value="1">
-                                        <input type="hidden" name="idArticle" value="{{ itemPanier.article_id }}">
-                                    <button class="btn btn-primary" > + </button>
-                                </form>
-                               {% endif %}
-                                <form action="/client/panier/delete"  style="display: inline-block;"  method="post">
-                                    <input type="hidden" name="idArticle" value="{{ itemPanier.article_id }}">
-                                    <button class="btn btn-primary" > - </button>
-                                </form>
+                        {% for itemPanier in articlesPanier %}
+                            <tr>
+                                <td>{{ itemPanier.nom }}</td>
+                                <td>{{ itemPanier.panier_quantite }}</td>
+                                {% if itemPanier.prix is defined %}
+                                    <td>{{itemPanier.prix}}</td>
+                                    <td>{{ "{:,.2f} €".format((itemPanier.prix * itemPanier.panier_quantite)) }}</td>
+                                {% else %}
+                                    <td>prix ND</td><td>prix*qte ND</td>
+                                {% endif %}
+                                <td>
+                                   {% if itemPanier.nbStock is defined and itemPanier.nbStock > 0 %}
+                                        <form action="/client/panier/add" style="display: inline-block;"  method="post">
+                                                <input type="hidden" name="quantite" value="1">
+                                                <input type="hidden" name="idArticle" value="{{ itemPanier.id_meuble }}">
+                                            <button class="btn btn-primary" > + </button>
+                                        </form>
+                                   {% endif %}
+                                    <form action="/client/panier/delete"  style="display: inline-block;"  method="post">
+                                        <input type="hidden" name="idArticle" value="{{ itemPanier.id_meuble }}">
+                                        <button class="btn btn-primary" > - </button>
+                                    </form>
 
-                                <form action="/client/panier/delete/line" style="display: inline-block;"  method="post">
-                                    <input type="hidden" name="idArticle" value="{{ itemPanier.article_id }}">
-                                    <button class="btn btn-primary" >Supprimer</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                                    <form action="/client/panier/delete/line" style="display: inline-block;"  method="post">
+                                        <input type="hidden" name="idArticle" value="{{ itemPanier.id_meuble }}">
+                                        <button class="btn btn-primary" >Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     {% endif %}
                 </table>
                     <form action="/client/panier/vider" style="display: inline-block;"  method="post" >
                         <button class="btn btn-primary"  > Éffacer tout </button>
                     </form>
                     <form action="/client/commande/add" style="display: inline-block;"  method="post" >
-                        <button class="btn btn-primary" > Passer ma commande </button>
+                        <button class="btn btn-primary"> Passer ma commande </button>
                     </form>
                     {% if prix_total %}
-                    Total à payer : <strong>{{ "{:,.2f} €".format(prix_total) }}</strong>
+                        Total à payer : <strong>{{ "{:,.2f} €".format(prix_total) }}</strong>
                     {% endif %}
             {% endif %}
             </div>
@@ -67,73 +67,74 @@
 
             <div class="col">
               <h3>Les filtres</h3>
-              Articles dont le nom est composé par :<br>
+              Meubles dont le nom est composé par :<br>
                  {% include('client/boutique/_filtre.html') %}
             </div>
 
         </div>
 
         <div class="bg-light p-3">
-            <h1>Les articles</h1>
+            <h1>Les meubles</h1>
         </div>
 
-        <div class="row">
-                {% for article in articles  %}
-                        <div class="card col-4 mt-4">
+        <div class="row g-4">
+                {% for ligne in meubles  %}
+                    <div class="col-4">
+                        <div class="card mt-4">
                             <div class="card-body border-dark rounded">
-                                <a href="/client/article/details/{{ article.id }}">
-                                <h2 class="card-title">
-                                    <span style="color: #0b2e13">{{ article.nom }}</span><br>
-                                    {{ article.prix }}
-                                    €
-                                </h2>
-                                <div class="card-body">
-                                     {%  if article.image is not none %}
-                                        <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/' + article['image']) }}"  alt="image  de {{ article.nom }}" >
-                                    {% else %} <img class="card-img-top rounded mx-auto d-block"   style="width:100px;height:100px"   src="{{ url_for('static', filename='images/no_photo.jpeg')}}"  alt="image  de {{ article.nom }}" >
+                                <a href="/client/article/details/{{ ligne.id_meuble }}">
+                                    <h2 class="card-title">
+                                        <span style="color: #0b2e13">{{ ligne.nom }}</span><br>
+                                        {{ ligne.prix }}
+                                        €
+                                    </h2>
+                                     {%  if ligne.image is not none %}
+                                        <img class="card-img-top rounded mx-auto d-block"  style="width:100px;height:100px"  src="{{ url_for('static', filename = 'images/' + ligne['image']) }}"  alt="image  de {{ ligne.nom }}" >
+                                    {% else %}
+                                         <img class="card-img-top rounded mx-auto d-block"   style="width:100px;height:100px"   src="{{ url_for('static', filename='images/no_photo.jpeg')}}"  alt="image  de {{ ligne.nom }}" >
                                     {% endif %}
                                     <hr>
-                                </div>
                                 </a>
                                 <div class="card-body">
-                                        <form  action="/client/panier/add" method="post">
-                                            <input type="hidden" name="idArticle" value="{{ article.id }}">
-                                            <button class="btn btn-success float-right">
-                                                <i class="fas fa-shopping-cart"></i>
-                                                Ajouter
-                                             </button>
+                                    <form  action="/client/panier/add" method="post">
+                                        <input type="hidden" name="idArticle" value="{{ ligne.id_meuble }}">
+                                        <button class="btn btn-success float-right">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            Ajouter
+                                        </button>
 
-                                            <div class="input-group input-group-sm" style="width: 4rem !important;">
-                                                <input type="number" id="input-{{ article.id }}" step="1" min="0" max="{{ article.stock }}" class="form-control" style="width: 4rem !important;" value="1" name="quantite">
-                                            </div>
-                                        </form>
+                                        <div class="input-group input-group-sm" style="width: 4rem !important;">
+                                            <input type="number" id="input-{{ ligne.id_meuble }}" step="1" min="0" max="{{ ligne.nbStock }}" class="form-control" style="width: 4rem !important;" value="1" name="quantite">
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="card-footer">
-                            {% if article.stock is defined %}
-                                 {% if article.stock > 0 %}
-                                    <small class="text-muted">Stock restant : {{ article.stock }}</small>
+                            {% if ligne.nbStock is defined %}
+                                 {% if ligne.nbStock > 0 %}
+                                    <small class="text-muted">Stock restant : {{ ligne.nbStock }}</small>
                                  {% else %}
-                                    <small class="text-muted">article  momentanément indisponible</small>
+                                    <small class="text-muted">meuble  momentanément indisponible</small>
                                  {% endif %}
                             {% endif %}
                                 <br>
-                            {% if article.nb_notes is defined %}
-                            {% if article.nb_notes > 1 %}
-                                 <a  href="/client/article/details/{{ article.id }}">
-                                    <span style="color: #3A7734"> note : {{  "{:,.1f}".format(article.moy_notes) }}</span>
-                                 </a>
+                            {% if ligne.nb_notes is defined %}
+                                {% if ligne.nb_notes > 1 %}
+                                     <a  href="/client/article/details/{{ ligne.id_meuble }}">
+                                        <span style="color: #3A7734"> note : {{  "{:,.1f}".format(ligne.moy_notes) }}</span>
+                                     </a>
+                                {% endif %}
                             {% endif %}
-                            {% endif %}
-                            {% if article.nb_avis is defined %}
-                            {% if article.nb_avis > 0 %}
-                                 <a href="/client/article/details/{{ article.id }}">
-                                    <span style="color: #3A7734">({{ article.nb_avis }} avis)</span>
-                                 </a>
-                            {% endif %}
+                            {% if ligne.nb_avis is defined %}
+                                {% if ligne.nb_avis > 0 %}
+                                     <a href="/client/article/details/{{ ligne.id_meuble }}">
+                                        <span style="color: #3A7734">({{ ligne.nb_avis }} avis)</span>
+                                     </a>
+                                {% endif %}
                             {% endif %}
                             </div>
                         </div>
+                    </div>
                 {% endfor %}
         </div>
     </div>

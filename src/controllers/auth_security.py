@@ -2,13 +2,12 @@
 # -*- coding:utf-8 -*-
 
 from flask import Blueprint
-from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
+from flask import request, render_template, redirect, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from connexion_db import get_db
 
-auth_security = Blueprint('auth_security', __name__,
-                        template_folder='templates')
+auth_security = Blueprint('auth_security', __name__, template_folder='templates')
 
 
 @auth_security.route('/login')
@@ -43,6 +42,7 @@ def auth_login_post():
         flash(u'Vérifier votre login et essayer encore.')
         return redirect('/login')
 
+
 @auth_security.route('/signup')
 def auth_signup():
     return render_template('auth/signup.html')
@@ -56,19 +56,20 @@ def auth_signup_post():
     password = request.form.get('password')
     tuple_select = (username, email)
     sql = '''select * from user where username=%s or email=%s;'''
-    retour = mycursor.execute(sql, tuple_select)
+    mycursor.execute(sql, tuple_select)
     user = mycursor.fetchone()
+    print(user)
     if user:
         flash(u'votre adresse <strong>Email</strong> ou  votre <strong>Username</strong> (login) existe déjà')
-        return redirect('/signup')
+        return redirect('/login')
 
     # ajouter un nouveau user
     password = generate_password_hash(password, method='sha256')
-    tuple_insert = (username, email, password, 'ROLE_client')
-    sql = '''insert into user(username,email,password,role) values(%s,%s,%s,%s);'''
+    tuple_insert = (username, password, 'ROLE_client', 1, email)
+    print(tuple_insert)
+    sql = '''insert into user(username,password,role,est_actif,email) values(%s,%s,%s,%s,%s);'''
     mycursor.execute(sql, tuple_insert)
-    get_db().commit()                    # position de cette ligne discutatble !
-    sql='''select last_insert_id_User()1 as last_insert_id;'''
+    sql = '''select last_insert_id() as last_insert_id;'''
     mycursor.execute(sql)
     info_last_id = mycursor.fetchone()
     user_id = info_last_id['last_insert_id']
@@ -80,8 +81,8 @@ def auth_signup_post():
     session['username'] = username
     session['role'] = 'ROLE_client'
     session['user_id'] = user_id
+    get_db().commit()
     return redirect('/client/article/show')
-    #return redirect(url_for('client_index'))
 
 
 @auth_security.route('/logout')
@@ -89,10 +90,13 @@ def auth_logout():
     session.pop('username', None)
     session.pop('role', None)
     session.pop('user_id', None)
+    session.pop('filter_types', None)
+    session.pop('filter_word', None)
+    session.pop('filter_prix_min', None)
+    session.pop('filter_prix_max', None)
     return redirect('/')
-    #return redirect(url_for('main_index'))
+
 
 @auth_security.route('/forget-password', methods=['GET'])
 def forget_password():
     return render_template('auth/forget_password.html')
-

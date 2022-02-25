@@ -5,5 +5,4 @@ from flask import Flask, request, render_template, redirect, url_for, abort, fla
 
 from connexion_db import get_db
 
-admin_panier = Blueprint('admin_panier', __name__,
-                        template_folder='templates')
+admin_panier = Blueprint('admin_panier', __name__, template_folder='templates')
