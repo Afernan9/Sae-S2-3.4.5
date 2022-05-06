@@ -16,13 +16,11 @@
         <table class="table table-striped">
             <thead>
                 <tr class="ligne_coloree">
-                    <th>id</th>
-                    <th>type du meuble</th>
                     <th>nom du meuble</th>
+                    <th>type du meuble</th>
                     <th>prix du meuble en €</th>
-                    <th>stock disponible</th>
                     <th>date de fabrication</th>
-                    <th>couleur</th>
+                    <th>couleurs disponibles(stock)</th>
                     <th>matériaux</th>
                     <th>image correspondante</th>
                     <th>opération</th>
@@ -32,13 +30,21 @@
             {% if meubles | length >= 1 %}
                 {% for ligne in meubles %}
                     <tr>
-                        <td>{{ ligne.id_meuble }}</td>
+                        <td>{{ ligne.nom }} <span>({{ ligne.id_meuble }})</span></td>
                         <td>{{ ligne.libelle_type }} <span>({{ ligne.id_MeubleType }})</span></td>
-                        <td>{{ ligne.nom }}</td>
                         <td>{{ ligne.prix }}</td>
-                        <td>{{ ligne.nbStock }}</td>
                         <td>{{ ligne.dateFabrication }}</td>
-                        <td>{{ ligne.libelle_couleur }} <span>({{ ligne.id_MeubleCouleur }})</span></td>
+
+                        <td>
+                            <select class="form-select rounded form-control" id="type_meuble">
+                                {% for coulStock in couleur %}
+                                    {% if coulStock.id_ColoreMeuble == ligne.id_meuble %}
+                                        <option>{{ coulStock.libelle_couleur }}({{ coulStock.nbStock }})</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+
                         <td>{{ ligne.libelle_materiaux }} <span>({{ ligne.id_MeubleMateriaux }})</span></td>
 
                         <td>
@@ -46,6 +52,12 @@
                             <img src={{ url_for('static', filename='images') }}/{{ ligne.image }} alt="" class="w-25">
                         </td>
                         <td>
+                            <div>
+                                <a href="/meubles/stock?id={{ ligne.id_meuble }}">
+                                    approvisionner
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                            </div>
                             <div>
                                 <a href="/meuble/edit/{{ ligne.id_meuble }}">
                                     editer

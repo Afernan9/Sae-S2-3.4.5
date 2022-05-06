@@ -35,6 +35,7 @@
                     <th>Coût total</th>
                     <th>État de la commande</th>
                     <th>Utilisateur</th>
+                    <th>A expedidier vers</th>
                     <th>Options</th>
                 </tr>
             </thead>
@@ -48,6 +49,7 @@
                             <td>{{ cmd.prix_tot }}</td>
                             <td>{{ cmd.libelle_etat }} <span>({{ cmd.id_CmdEtat }})</span></td>
                             <td>{{ cmd.username }} <span>({{ cmd.id_CmdUser }})</span></td>
+                            <td>{{ cmd.adress }}</td>
                         <td>
                             <a href="/admin/commande/valider?id_cmd={{ cmd.id_cmd }}">Expédier</a>
 

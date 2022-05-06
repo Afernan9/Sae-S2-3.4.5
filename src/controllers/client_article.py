@@ -20,17 +20,21 @@ def client_article_show():                                 # remplace client_ind
     types_articles = mycursor.fetchall()
 
     username = session['user_id']
-    sql = '''select M.nom, M.id_meuble, P.panier_quantite, M.prix, M.nbStock
+    sql = '''select M.nom, M.id_meuble, P.panier_quantite, M.prix, P.id_PanierCouleur, cl.libelle_couleur, c.nbStock
              from panier P
              inner join meubles M on M.id_meuble = P.id_PanierMeuble
+             left join colore c on c.id_ColoreMeuble = M.id_meuble
+             left join couleur cl on cl.id_couleur = P.id_PanierCouleur
              where P.id_PanierUser = %s
+             group by P.id_ajout
              ;'''
     mycursor.execute(sql, username)
     articles_panier = mycursor.fetchall()
 
-    sql = '''select M.id_meuble,M.nom,M.prix,M.nbStock,M.image,coalesce(count(A.libelle_avis),0) as nb_avis,
-           coalesce(count(A.note),0) as nb_notes,avg(A.note) as moy_notes
+    sql = '''select M.id_meuble, M.nom, M.prix, M.image, coalesce (sum(c.nbStock), 0) as stockTot,
+           coalesce(count(A.id_avis),0) as nb_avis, coalesce(count(A.note),0) as nb_notes, avg(A.note) as moy_notes
            from meubles M
+           left join colore c on c.id_ColoreMeuble = M.id_meuble
            left join avis A on A.id_AvisMeuble = id_meuble
          '''
     list_param = []
@@ -56,7 +60,7 @@ def client_article_show():                                 # remplace client_ind
                 sql = sql + "or "
             list_param.append(item)
         sql = sql + ")"
-    sql = sql + "group by M.id_meuble,M.nom,M.prix,M.nbStock,M.image;"
+    sql = sql + "group by M.id_meuble;"
     tuple_sql = tuple(list_param)
     mycursor.execute(sql, tuple_sql)
     meubles = mycursor.fetchall()
@@ -67,8 +71,21 @@ def client_article_show():                                 # remplace client_ind
             where P.id_PanierUser = %s;'''
     mycursor.execute(sql, id_user)
     prix_total = mycursor.fetchone()['sous_total']
+
+# ======================================================================================================================
+    sql = '''select id_couleur, libelle_Couleur, c.nbStock, c.id_ColoreMeuble
+            from couleur
+            left join colore c on c.id_ColoreCouleur = id_couleur
+            order by libelle_Couleur;'''
+    mycursor.execute(sql)
+    couleur = mycursor.fetchall()
+
+    sql = '''SELECT id_pointRelais, CONCAT(adresse, ' - ', ville) AS adress FROM pointRelais;'''
+    mycursor.execute(sql)
+    pointRs = mycursor.fetchall()
+
     return render_template('client/boutique/panier_article.html', articlesPanier=articles_panier, meubles=meubles,
-                           prix_total=prix_total, itemsFiltre=types_articles)
+                           prix_total=prix_total, itemsFiltre=types_articles, couleur=couleur, pointRs=pointRs)
 
 
 @client_article.route('/client/article/details/<int:id>', methods=['GET'])
@@ -89,7 +106,6 @@ def client_article_details(id):
     mycursor.execute(sql, id)
     commentaires = mycursor.fetchall()
 
-# ====================================================================================================================== dans html cmd | lenght ???
     id_user = session['user_id']
     sql = '''select count(C.id_cmd) as qte
              from ligne_de_commande L

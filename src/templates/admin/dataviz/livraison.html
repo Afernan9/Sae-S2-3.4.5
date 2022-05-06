@@ -12,11 +12,11 @@
 {% endblock %}
 
 {% block title %}
-    <title>bilan des stocks</title>
+    <title>bilan des commande</title>
 {% endblock %}
 
 {% block body %}
-    <h2>bilan global des stocks</h2>
+    <h2>bilan global des commande</h2>
     <div class="container-fluid">
         <br>
         <div style="width: 900px; height: 500px; border: #0a53be 1px solid;">
@@ -31,7 +31,7 @@
                 labels: {{ labels | safe }},
                 datasets: [
                     {
-                    label: "Stock Restant",
+                    label: "Gains en fonctions des villes",
                     data: {{ values | safe }},
                     fill: false,
                      backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850",

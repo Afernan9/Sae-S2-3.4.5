@@ -14,28 +14,27 @@ def client_panier_add():
     quantite = request.form.get('quantite')
     date = datetime.now().strftime('%Y-%m-%d')
     id_meuble = request.form.get('idArticle')
+    couleur = request.form.get("couleur")
     id_user = session['user_id']
 
     sql = '''select * from panier P
-             where P.id_PanierMeuble = %s and P.id_PanierUser = %s
+             where P.id_PanierMeuble = %s and P.id_PanierCouleur = %s and P.id_PanierUser = %s
              ;'''
-    mycursor.execute(sql, (id_meuble, id_user))
+    mycursor.execute(sql, (id_meuble, couleur, id_user))
     articles_panier = mycursor.fetchone()
 
     if (articles_panier is not None) and articles_panier['panier_quantite'] >= 1:
         sql = '''update panier set panier_quantite=panier_quantite+%s 
-                 where id_PanierMeuble = %s and id_PanierUser = %s;'''
-        tuple_edit = (quantite, id_meuble, id_user)
+                 where id_PanierMeuble = %s and id_PanierCouleur = %s and id_PanierUser = %s;'''
+        tuple_edit = (quantite, id_meuble, couleur, id_user)
         mycursor.execute(sql, tuple_edit)
     else:
-        sql = "insert into panier(panier_quantite,date_ajout,id_PanierMeuble,id_PanierUser) values (%s,%s,%s,%s);"
-        tuple_edit = (quantite, date, id_meuble, id_user)
+        sql = "insert into panier(panier_quantite,date_ajout,id_PanierMeuble,id_PanierCouleur,id_PanierUser) values (%s,%s,%s,%s,%s);"
+        tuple_edit = (quantite, date, id_meuble, couleur, id_user)
         mycursor.execute(sql, tuple_edit)
 
-    get_db().commit()
-
-    sql = '''update meubles M set M.nbStock = M.nbStock - %s where M.id_meuble = %s;'''
-    mycursor.execute(sql, (quantite, id_meuble))
+    sql = '''update colore set nbStock = nbStock - %s where id_ColoreCouleur = %s and id_ColoreMeuble = %s;'''
+    mycursor.execute(sql, (quantite, couleur, id_meuble))
     get_db().commit()
     return redirect('/client/article/show')
 
@@ -44,23 +43,24 @@ def client_panier_add():
 def client_panier_delete():
     mycursor = get_db().cursor()
     id_meuble = request.form.get('idArticle')
+    couleur = request.form.get("couleur")
     id_user = session['user_id']
 
     sql = '''select panier_quantite from panier P
-                 where P.id_PanierMeuble = %s and P.id_PanierUser = %s
+                 where P.id_PanierMeuble = %s and P.id_PanierCouleur = %s and P.id_PanierUser = %s
                  ;'''
-    mycursor.execute(sql, (id_meuble, id_user))
+    mycursor.execute(sql, (id_meuble, couleur, id_user))
     quantite = mycursor.fetchone()
 
     if quantite['panier_quantite'] == 1:
         client_panier_delete_line()
         return redirect('/client/article/show')
 
-    sql = '''update panier set panier_quantite=panier_quantite-1 where id_PanierMeuble = %s;'''
-    mycursor.execute(sql, id_meuble)
+    sql = '''update panier set panier_quantite=panier_quantite-1 where id_PanierMeuble = %s and  id_PanierCouleur = %s and id_PanierUser = %s;'''
+    mycursor.execute(sql, (id_meuble, couleur, id_user))
 
-    sql = '''update meubles M set M.nbStock = M.nbStock + 1  where M.id_meuble = %s;'''
-    mycursor.execute(sql, id_meuble)
+    sql = '''update colore set nbStock = nbStock + 1  where id_ColoreMeuble = %s and id_ColoreCouleur = %s;'''
+    mycursor.execute(sql, (id_meuble, couleur))
     get_db().commit()
 
     return redirect('/client/article/show')
@@ -71,15 +71,15 @@ def client_panier_vider():
     mycursor = get_db().cursor()
     id_user = session['user_id']
 
-    sql = '''select panier_quantite, id_PanierMeuble from panier where id_PanierUser = %s;'''
+    sql = '''select panier_quantite, id_PanierMeuble, id_PanierCouleur from panier where id_PanierUser = %s;'''
     mycursor.execute(sql, id_user)
     panier = mycursor.fetchall()
 
     for i in range(0, len(panier)):
         ligne_panier = panier[i]
 
-        sql = '''update meubles M set M.nbStock = M.nbStock + %s where id_meuble = %s;'''
-        mycursor.execute(sql, (ligne_panier['panier_quantite'], ligne_panier['id_PanierMeuble']))
+        sql = '''update colore set nbStock = nbStock + %s where id_ColoreMeuble = %s and id_ColoreCouleur = %s;'''
+        mycursor.execute(sql, (ligne_panier['panier_quantite'], ligne_panier['id_PanierMeuble'], ligne_panier['id_PanierCouleur']))
         get_db().commit()
 
     sql = "delete from panier where id_PanierUser = %s;"
@@ -94,21 +94,22 @@ def client_panier_delete_line():
 
     id_meuble = request.form.get('idArticle')
     id_user = session['user_id']
+    couleur = request.form.get('couleur')
 
     sql = '''select panier_quantite
-                    from panier
-                    where id_PanierMeuble = %s and id_PanierUser = %s;'''
-    mycursor.execute(sql, (id_meuble, id_user))
+            from panier
+            where id_PanierMeuble = %s and id_PanierCouleur = %s and id_PanierUser = %s;'''
+    mycursor.execute(sql, (id_meuble, couleur, id_user))
     quantite = mycursor.fetchone()
 
-    sql = '''update meubles M set M.nbStock = M.nbStock + %s where M.id_meuble=%s;'''
-    mycursor.execute(sql, (quantite['panier_quantite'], id_meuble))
+    sql = '''update colore set nbStock = nbStock + %s where id_ColoreMeuble=%s and id_ColoreCouleur = %s;'''
+    mycursor.execute(sql, (quantite['panier_quantite'], id_meuble, couleur))
     get_db().commit()
 
     sql = '''delete from panier
-             where id_PanierMeuble = %s;
+             where id_PanierMeuble = %s and id_PanierCouleur = %s;
           '''
-    mycursor.execute(sql, id_meuble)
+    mycursor.execute(sql, (id_meuble, couleur))
     get_db().commit()
     return redirect('/client/article/show')
 

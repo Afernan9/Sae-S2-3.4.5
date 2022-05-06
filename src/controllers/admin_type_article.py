@@ -69,10 +69,12 @@ def delete_type_meuble():
         mycursor.execute(sql, id)
         nb_tot = mycursor.fetchall()
         print("nbTot = ", nb_tot)
-        sql = '''select m.nom, m.id_meuble, m.id_MeubleType, m.nbStock
+        sql = '''select m.nom, m.id_meuble, m.id_MeubleType, c.nbStock
             from meubles m
+            left join colore c on c.id_ColoreMeuble = m.id_meuble
             inner join types_meubles t on t.id_type=m.id_MeubleType
             where t.id_type=%s
+            group by m.id_meuble
             order by m.nom;'''
         mycursor.execute(sql, id)
         meubles_associes = mycursor.fetchall()
@@ -88,7 +90,7 @@ def deleteMeuble_type_meuble():
     id = request.args.get('id')
     print("id_meuble = ", id_meuble, " id = ", id)
     sql = '''select * from ligne_de_commande
-                where id_LigneMeuble = %s'''
+                where id_LigneMeuble = %s;'''
     mycursor.execute(sql, id_meuble)
     cmd = mycursor.fetchall()
     sql = '''select * from panier
@@ -96,6 +98,8 @@ def deleteMeuble_type_meuble():
     mycursor.execute(sql, id_meuble)
     panier = mycursor.fetchall()
     if cmd == () and panier == ():
+        sql = "delete from colore where id_ColoreMeuble = %s;"
+        mycursor.execute(sql, id_meuble)
         sql = "delete from meubles where id_meuble=(%s);"
         mycursor.execute(sql, id_meuble)
         get_db().commit()
@@ -110,10 +114,12 @@ def deleteMeuble_type_meuble():
         order by m.nom;'''
     mycursor.execute(sql, id)
     nb_tot = mycursor.fetchall()
-    sql = '''select m.nom, m.id_meuble, m.id_MeubleType, m.nbStock
+    sql = '''select m.nom, m.id_meuble, m.id_MeubleType, c.nbStock
         from meubles m
+        left join colore c on c.id_ColoreMeuble = m.id_meuble
         inner join types_meubles t on t.id_type=m.id_MeubleType
         where t.id_type=%s
+        group by m.id_meuble
         order by m.nom;'''
     mycursor.execute(sql, id)
     meubles_associes = mycursor.fetchall()

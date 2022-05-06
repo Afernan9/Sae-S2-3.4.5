@@ -20,6 +20,16 @@
             </li>
 
             <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="DropdownCommandes" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Adresse
+                </a>
+                <div class="dropdown-menu" aria-labelledby="DropdownCommandes">
+                    <a class="dropdown-item"  href="/admin/adress/show" {#  action="{{ url_for("admin_commande_show") }}"  #} >Liste des Adresses</a>
+                    <a class="dropdown-item" href="/admin/article/adressbilan"   {# admin_produit_details #} > Détails (dataviz) des adresse </a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="DropdownClient" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Clients
                 </a>
@@ -40,6 +50,12 @@
                     <a class="dropdown-item" href="/admin/type-article/bilan-stock"   {# admin_produit_details #} > Détails  (dataviz) des types de meubles </a>
                     <a class="dropdown-item" href="/admin/article/bilan"   {# admin_produit_details #} > Détails (dataviz) de meubles </a>
                 </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="/admin/avis">
+                    Avis
+                </a>
             </li>
         </ul>
 

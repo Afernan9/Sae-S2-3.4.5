@@ -27,7 +27,7 @@
                 <br>
                 <label class="mb-2" for="couleur">Couleur du meuble :</label>
                 <br>
-                <select name="couleur" class="form-select" id="type_meuble" required>
+                <select name="couleur" class="form-select rounded form-control" id="type_meuble" required>
                     <option value="">Choisir</option>
                     {% if couleur | length >= 1 %}
                         {% for ligne in couleur %}
@@ -40,7 +40,7 @@
                 <br>
                 <label class="mb-2" for="materiaux">Matériaux du meuble :</label>
                 <br>
-                <select name="materiaux" class="form-select" id="materiaux" required>
+                <select name="materiaux" class="form-select rounded form-control" id="materiaux" required>
                     <option value="">Choisir</option>
                     {% if materiaux | length >= 1 %}
                         {% for ligne in materiaux %}
@@ -62,7 +62,7 @@
                 <input name="image" type="file" class="mb-3 rounded" id="image">
                 <br>
                 <label class="mb-2" for="type_meuble">Type de meubles :</label>
-                <select name="typeMeuble_id" class="form-select" id="type_meuble" required>
+                <select name="typeMeuble_id" class="form-select rounded form-control" id="type_meuble" required>
                     <option value="">Choisir</option>
                     {% if typeMeuble | length >= 1 %}
                         {% for ligne in typeMeuble %}

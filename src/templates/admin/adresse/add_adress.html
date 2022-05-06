@@ -1,0 +1,36 @@
+{% extends 'admin/layout_admin.html' %}
+
+{% block title %}
+    <title>ajouter un point de livraison</title>
+{% endblock %}
+
+{% block body %}
+  <h2>ajout d'un point de livraison</h2>
+  {% if error %}
+      <p class=error><strong>Error:</strong> {{ error }}</p>
+  {% endif %}
+    <div class="container">
+      <form method="post" action="/admin/adress/add" class="m-3 p-2">
+        <fieldset>
+            <legend class="mb-4 ms-5 fs-3">Ajouter un point de relais</legend>
+                <label class="mb-2" for="adress">Adresse :</label>
+                <br>
+                <input name="adress" type="text" size="18"  class="mb-2 rounded form-control" placeholder="Saisir l'adresse" id="adress">
+                <br>
+                <label class="mb-2" for="ville">Ville :</label>
+                <br>
+                <input name="ville" type="text" size="18" class="mb-2 rounded form-control" id="ville">
+                <br>
+                <br>
+                <button type="submit" class="btn btn-success btn-sm">
+                    créer
+                    <i class="bi bi-check2-square"></i>
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    réinitialiser
+                    <i class="bi bi-recycle"></i>
+                </button>
+        </fieldset>
+      </form>
+    </div>
+{% endblock %}

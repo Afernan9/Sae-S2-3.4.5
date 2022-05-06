@@ -1,0 +1,52 @@
+{% extends 'admin/layout_admin.html' %}
+
+{% block title %}
+    <title>afficher les meubles</title>
+{% endblock %}
+
+{% block body %}
+    <a href="/admin/adress/add">
+        ajouter un point de livraison
+        <i class="bi bi-plus-square"></i>
+    </a>
+    <br>
+    <br>
+
+    <div class="container-fluid">
+        <table class="table table-striped">
+            <thead>
+                <tr class="ligne_coloree">
+                    <th>id</th>
+                    <th>Adresse</th>
+                    <th>Ville</th>
+                    <th>opération</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if adresse | length >= 1 %}
+                {% for ligne in adresse %}
+                    <tr>
+                        <td>{{ ligne.id_pointRelais }}</td>
+                        <td>{{ ligne.adresse }}</td>
+                        <td>{{ ligne.ville }}</td>
+                        <td>
+                            <div>
+                                <a href="/admin/adresse/del?id_pointRelais={{ ligne.id_pointRelais }}" onclick="return confirm('Êtes vous sûrs ?')">
+                                    supprimer
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                    <tr>
+                          <td>
+                              <p>pas de point de livraison</p>
+                          </td>
+                   </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

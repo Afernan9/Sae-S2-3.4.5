@@ -1,6 +1,6 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
-from flask import Blueprint
+from flask import Blueprint, flash, url_for
 from flask import request, render_template, redirect
 
 from connexion_db import get_db
@@ -20,12 +20,13 @@ def admin_commande_show():
     print(id_cmd)
 
     sql = '''select C.id_cmd, C.date_achat, L.quantite, SUM(M.prix*L.quantite) as prix_tot, C.id_CmdEtat, E.libelle_etat,
-            C.id_CmdUser, U.username
+            C.id_CmdUser, U.username, CONCAT(PR.adresse, ' - ', PR.ville) as adress
             from commande C
             inner join ligne_de_commande L on L.id_LigneCmd=C.id_cmd
             inner join meubles M on M.id_meuble = L.id_LigneMeuble
             inner join etat E on E.id_etat = C.id_CmdEtat
             inner join user U on U.id_User = C.id_CmdUser
+            inner join pointRelais PR on PR.id_pointRelais = C.id_PointRelais
             group by C.id_cmd
             ;
             '''
